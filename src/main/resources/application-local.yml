@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    dynamic:
+      primary: hnbt_1 #设置默认的数据源或者数据源组,默认值即为master
+      strict: false #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源.
+      datasource:
+        hnbt:
+          url: jdbc:mysql://localhost:3306/hnbt?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+          username: root
+          password: 123
+#          driver-class-name: com.mysql.jdbc.Driver # 3.2.0开始支持SPI可省略此配置
+        hnbt_1:
+          url: jdbc:mysql://localhost:3306/hnbt_451026?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+          username: root
+          password: 123
+#          driver-class-name: com.mysql.jdbc.Driver
+        hnbt_2:
+          url: jdbc:mysql://localhost:3306/hnbt_451027?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+          username: root
+          password: 123
+#          driver-class-name: com.mysql.jdbc.Driver
+
+
+ftp:
+  user: 'ftpuser'
+  password: '%TGB^YHN123'
+  port: '21'
+  ip: '139.159.247.218'

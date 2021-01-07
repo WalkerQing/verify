@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunyang.hnbt.applets.mapper.MerchartAmountDetailMapper">
+    <insert id="insertTodayOutputDetail" >
+        INSERT INTO `merchart_amount_detail` (
+            `mer_no`,
+            `dateallstr`,
+            `yearint`,
+            `monthint`,
+            `dateint`,
+            `type`,
+            `actual_amount`,
+            business_id,
+            `create_time`
+        ) SELECT
+            t.mer_no,
+            t.input_time AS dateallStr,
+            LEFT (t.input_time, 4),
+            SUBSTR(t.input_time, 5, 2),
+            SUBSTR(t.input_time, 7, 2),
+            3 AS type,
+            t.money,
+            t.id,
+            NOW()
+        FROM
+            (
+            SELECT
+                t1.mer_no,
+                DATE_FORMAT(t1.check_end_time, '%Y%m%d') AS 'input_time',
+                t.money,
+                t.id
+            FROM
+                subsidy_item_new t,
+                subsidy_new t1
+            WHERE
+                t.main_id = t1.id
+            AND date_format(t1.check_end_time, '%Y%m%d') = DATE_FORMAT(curdate(), '%Y%m%d')
+            ) t,
+            hnbt.pay_mer_no t1
+        WHERE
+            t.mer_no = t1.mer_no and t.input_time = date_format(CURDATE(),'%Y%m%d')
+        ;
+    </insert>
+    <insert id="insertTodayRefundDetail" >
+        INSERT INTO `merchart_amount_detail` (
+            `mer_no`,
+            `dateallstr`,
+            `yearint`,
+            `monthint`,
+            `dateint`,
+            `type`,
+            `actual_amount`,
+            business_id,
+            `create_time`
+        ) SELECT
+            t.mer_no,
+            t.input_time AS dateallStr,
+            LEFT (t.input_time, 4),
+            SUBSTR(t.input_time, 5, 2),
+            SUBSTR(t.input_time, 7, 2),
+            2 AS type,
+            t.money,
+            t.id,
+            NOW()
+        FROM
+            (
+            SELECT
+                t1.mer_no,
+                DATE_FORMAT(date_sub(t1.check_end_time,interval -1 day), '%Y%m%d') AS 'input_time',
+                t.money,
+                t.tran_id
+            FROM
+                subsidy_item_new t,
+                subsidy_new t1
+            WHERE
+                t.main_id = t1.id
+            AND date_format(t1.check_end_time, '%Y%m%d') = DATE_FORMAT(curdate(), '%Y%m%d')
+            ) t,
+            hnbt.pay_mer_no t1
+        WHERE
+            t.mer_no = t1.mer_no and t.input_time = date_format(CURDATE(),'%Y%m%d')
+        ;
+    </insert>
+
+    <insert id="insertTodayInputDetail" parameterType="String">
+        INSERT INTO `merchart_amount_detail` (
+            `mer_no`,
+            `dateallstr`,
+            `yearint`,
+            `monthint`,
+            `dateint`,
+            `type`,
+            `actual_amount`,
+            `create_time`,
+            business_id
+        ) SELECT
+            t.mer_no,
+            t.input_time AS dateallStr,
+            LEFT (t.input_time, 4),
+            SUBSTR(t.input_time, 5, 2),
+            SUBSTR(t.input_time, 7, 2),
+            1 AS type,
+            t.balance,
+            NOW(),
+            t.rec_no
+        FROM
+            hnbt.`mer_input` t,
+            hnbt.pay_mer_no t1
+        WHERE
+            t.mer_no = t1.mer_no
+        AND t1.area_code = '#{area_code}';
+    </insert>
+</mapper>
