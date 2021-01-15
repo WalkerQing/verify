@@ -13,9 +13,9 @@ import lombok.*;
  * @author qy
  * @since 2021-01-06
  */
-@Data
+@Getter
 @ToString
-@NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class MerchartAmountDetail implements Serializable {
@@ -25,43 +25,47 @@ public class MerchartAmountDetail implements Serializable {
     /**
      * 商户号
      */
-    private String merNo;
+    private final String merNo;
 
     /**
      * 完整的日期
      */
+    @Setter
     private String dateallstr;
 
     /**
      * 年
      */
-    private Integer yearint;
+    private final Integer yearint;
 
     /**
      * 月
      */
-    private Integer monthint;
+    @Setter
+    private  Integer monthint;
 
     /**
      * 日
      */
-    private Integer dateint;
+    @Setter
+    private  Integer dateint;
 
     /**
      * 类型1充值2退款3支出
      */
-    private Integer type;
+    private final Integer type;
 
     /**
      * 发生额
      */
-    private Double actualAmount;
+    private final Double actualAmount;
 
     /**
      * 业务id
      */
-    private String businessId;
+    private final String businessId;
 
+    @Setter
     private LocalDateTime createTime;
 
 

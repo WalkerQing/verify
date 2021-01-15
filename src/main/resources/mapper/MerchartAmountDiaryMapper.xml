@@ -1,5 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yunyang.hnbt.applets.mapper.MerchartAmountDiaryMapper">
+    <resultMap id="BaseResultMap" type="com.yunyang.hnbt.applets.entity.MerchartAmountDiary">
+        <result column="mer_no" jdbcType="VARCHAR" property="merNo" />
+        <result column="is_use" jdbcType="VARCHAR" property="isUse" />
+        <result column="dateallstr" jdbcType="VARCHAR" property="datestr" />
+        <result column="yearint" jdbcType="BIGINT" property="yearint" />
+        <result column="monthint" jdbcType="BIGINT" property="monthint" />
+        <result column="dateint" jdbcType="BIGINT" property="dateint" />
+        <result column="output" jdbcType="DECIMAL" property="output" />
+        <result column="input" jdbcType="DECIMAL" property="input" />
+        <result column="refund" jdbcType="DECIMAL" property="refund" />
+        <result column="balance" jdbcType="DECIMAL" property="balance" />
+        <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+    </resultMap>
 
+    <select  id="diary" resultMap="BaseResultMap">
+        SELECT
+            *, 1 AS 'is_use',
+            LEFT (dateallstr, 4) AS yearint,
+            substr(dateallstr, 5, 2) AS monthint,
+            substr(dateallstr, 7, 2) AS dateint
+        FROM
+            (
+                SELECT
+                    mer_no,
+                    dateallstr,
+                    cast(
+                        sum(IF(type = 3, actual_amount, 0)) AS DECIMAL (11, 2)
+                    ) AS output,
+                    cast(
+                        sum(IF(type = 2, actual_amount, 0)) AS DECIMAL (11, 2)
+                    ) AS refund,
+                    cast(
+                        sum(IF(type = 1, actual_amount, 0)) AS DECIMAL (11, 2)
+                    ) AS input
+                FROM
+                    merchart_amount_detail t
+
+                GROUP BY
+                    mer_no,
+                    dateallstr
+                ORDER BY
+                    mer_no,
+                    dateallstr
+            ) t
+        ORDER BY
+            mer_no,
+            dateallstr
+    </select>
+
+
+    <select id="lastBalance" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            merchart_amount_diary
+        WHERE
+            id IN (
+                SELECT
+                    max(id) AS id
+                FROM
+                    merchart_amount_diary
+                GROUP BY
+                    mer_no
+            )
+    </select>
+
+    <delete id="deleteAll">
+        delete from merchart_amount_diary;
+    </delete>
 </mapper>

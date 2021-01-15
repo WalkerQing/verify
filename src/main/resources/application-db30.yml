@@ -1,0 +1,39 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    dynamic:
+      primary: hnbt #设置默认的数据源或者数据源组,默认值即为master
+      strict: true #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源.
+      datasource:
+        hnbt:
+          url: jdbc:mysql://192.168.1.30:3306/hnbt?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+          username: root
+          password: '!Yunyang123'
+
+        hnbt_451026:
+          url: jdbc:mysql://192.168.1.30:3306/hnbt_451026?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+          username: root
+          password: '!Yunyang123'
+
+        hnbt_451027:
+          url: jdbc:mysql://192.168.1.30:3306/hnbt_451027?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+          username: root
+          password: '!Yunyang123'
+
+        hnbt_451022:
+          url: jdbc:mysql://192.168.1.30:3306/hnbt_451022?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+          username: root
+          password: '!Yunyang123'
+
+        hnbt_451081:
+          url: jdbc:mysql://192.168.1.30:3306/hnbt_451081?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+          username: root
+          password: '!Yunyang123'
+
+swagger:
+  enable: true
+  application-name: ${spring.application.name}
+  application-version: 1.0
+  application-description: springfox swagger 3.0整合Demo
+  try-host: http://localhost:${server.port}
